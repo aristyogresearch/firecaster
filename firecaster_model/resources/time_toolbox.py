@@ -19,7 +19,7 @@ class TimeToolbox():
         :param to_dt_format: date format to be converted to
         :type  to_dt_format: :py:class:`obj`
 
-        :return: DataTime 
+        :return: DateTime 
         """
         try:
             if isinstance(from_dt, str):
@@ -91,7 +91,7 @@ class TimeToolbox():
         :param dt_str: date object to be converted
         :type  dt_str: :py:class:`obj`
 
-        :return: DataTime 
+        :return: DateTime 
         """
         if isinstance(dt_str, str):
             dt = self.convert_to_datetime(dt_str)
@@ -107,7 +107,7 @@ class TimeToolbox():
         :param dt_str: date object to be converted
         :type  dt_str: :py:class:`obj`
 
-        :return: DataTime 
+        :return: DateTime 
         """
         if isinstance(dt_str, str):
             dt = self.convert_to_datetime(dt_str)
@@ -123,7 +123,7 @@ class TimeToolbox():
         :param dt_str: date object to be converted
         :type  dt_str: :py:class:`obj`
 
-        :return: DataTime 
+        :return: DateTime 
         """
         if isinstance(dt_str, str):
             dt = self.convert_to_datetime(dt_str)
@@ -137,13 +137,13 @@ class TimeToolbox():
         """
         convert a string to datetime
 
-        :param dt_str: A dataframe containing data
+        :param dt_str: date time in `str` format
         :type  dt_str: :py:class:`str`
 
         :param date_format: date format
         :type  date_format: ``
 
-        :return: DataTime 
+        :return: DateTime 
         """
 
         return datetime.strptime(dt_str, date_format)
@@ -158,7 +158,7 @@ class TimeToolbox():
         :param date_format: date format
         :type  date_format: ``
 
-        :return: string format for DataTime 
+        :return: string format for DateTime 
         """
 
         return dt.strftime(date_format)
@@ -197,7 +197,7 @@ class TimeToolbox():
         :param to_dt_format: to date format
         :type  to_dt_format: ``
 
-        :return: string format for DataTime 
+        :return: string format for DateTime 
         """
         DAYS, HOURS, MINUTES, SECONDS = 3600 * 24, 3600, 60, 1
 

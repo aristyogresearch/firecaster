@@ -23,6 +23,9 @@ class DataQuester():
     def join_incidents_to_tracts(self, export_to):
         """
         get tracts data
+        
+        :param export_to: 
+        :type  export_to: :py:class:`str`
 
         DB Tables:
         - nyc_weather
@@ -40,6 +43,9 @@ class DataQuester():
         """
         get mappluto data
 
+        :param export_to: 
+        :type  export_to: :py:class:`str`
+
         DB Tables:
         - nyc_map_pluto_16v1
         """
@@ -51,6 +57,9 @@ class DataQuester():
         """
         get buildings data
 
+        :param export_to: 
+        :type  export_to: :py:class:`str`
+        
         DB Tables:
         - nyc_map_pluto_16v1
         """
