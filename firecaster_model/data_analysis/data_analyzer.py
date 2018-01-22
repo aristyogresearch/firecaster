@@ -7,7 +7,11 @@ from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from sklearn.model_selection import cross_validate
 from collections import Counter
 import cPickle
-
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
 
 class DataAnalyzer():
     """
@@ -98,6 +102,41 @@ class DataAnalyzer():
 
         return X_train, X_test, y_train, y_test
 
+
+    def train_test_split_chronologically(self, df, features, target, train_dt, test_dt):
+        """
+        Generate Train/Test Datasets by time order
+
+        :param df: dataframe
+        :type df: :py:class:`pandas.DataFrame`
+        
+        :param features: a list of features
+        :type  features: :py:class:`list`
+
+        :param target: a list of one target name
+        :type  target: :py:class:`list`
+
+        :param train_dt: an array
+        :type  train_dt: `np.array`
+
+        :param test_dt: an array
+        :type  test_dt: `np.array`
+
+        return X_train, X_test, y_train, y_test
+        """
+
+        X_train = df[df[u'incident_date_time'].isin(train_dt)][features]
+        X_test = df[df[u'incident_date_time'].isin(test_dt)][features]
+        y_train = df[df[u'incident_date_time'].isin(train_dt)][target]
+        y_test = df[df[u'incident_date_time'].isin(test_dt)][target]
+
+        logging.info("X_train.shape = %r", X_train.shape)
+        logging.info("X_test.shape = %r", X_test.shape)
+        logging.info("y_train.shape = %r", y_train.shape)
+        logging.info("y_test.shape = %r", y_test.shape)
+
+        return X_train, X_test, y_train, y_test
+
     def label_target(self, df, target):
         """
         label target based on some criterias 
@@ -178,6 +217,40 @@ class DataAnalyzer():
         logging.info("ROC AUC= %r", np.mean(roc_auc_scores))
 
         return clr
+
+
+    def run_model(self, classifier, X_train, X_test, y_train, y_test):
+        """
+        run a classifier and generate results
+
+        :param classifier:
+        :type classifier:
+
+        :param X_train : 
+        :type  X_train: `np.array` 
+
+        :param X_test :  
+        :type  X_test: `np.array`
+
+        :param y_train : 
+        :type  y_train: `np.array` 
+
+        :param y_test :  
+        :type  y_test: `np.array`
+        """
+        classifier.fit(X_train, y_train)
+        predicted_labels = classifier.predict(X_test)
+
+        accuracy = accuracy_score(y_test, predicted_labels)
+        precision = precision_score(y_test, predicted_labels)
+        recall = recall_score(y_test, predicted_labels)
+        f1 = f1_score(y_test, predicted_labels)
+
+        logging.info("Accuracy = %r", accuracy)
+        logging.info("Precision = %r", precision)
+        logging.info("Recall = %r", recall)
+        logging.info("F1 = %r", f1)
+
 
     def dump_model(self, clr, output):
         """

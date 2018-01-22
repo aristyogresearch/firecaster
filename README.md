@@ -1,4 +1,4 @@
-## “FireCaster”: Can Big Data Predict Domestic Fire Risk and Save Lives ? 
+## “FireCaster”: How Can We Use Data to Predict Domestic Fire Risk and Save Lives ? 
 
 ## Problem
 

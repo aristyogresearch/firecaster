@@ -2,7 +2,14 @@
 CONFIG_DIR = './config'
 CONFIG_DB = 'db.json'
 
-# Commands to run the script 
+# Fields
+DATETIME_FIELD = u'incident_date_time'
+
+TEST_PERIOD = ['{}-12-2014'.format(str(i).zfill(2)) for i in range(31)]
+
+# Commands to run the script
+RUN_TASK_SHUFFLE_VALIDATION = False
+RUN_TASK_OUT_TIME_VALIDATION = True 
 RUN_DATA_AGGREGATION_TASK = 'DATA_AGGREGATION'
 RUN_DATA_PREPROCESSING_TASK = 'DATA_PREPROCESSING'
 RUN_DATA_CLEANING_TASK = 'DATA_CLEANING'

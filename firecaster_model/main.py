@@ -9,7 +9,7 @@ from os.path import abspath, join, dirname
 from resources.constants import *
 from config.keys import CENSUS_KEY
 from config.parameters import EXPERIMENT_START_DATE, EXPERIMENT_END_DATE
-
+import numpy as np
 import json
 import logging
 import argparse
@@ -185,10 +185,7 @@ if __name__ == '__main__':
         # filter relevant features
         incidents_context_final_fname = abspath(join(PROCESSED_DIR, NYC_INCIDENTS_CONTEXT_FINAL_FNAME))
         data_transformer.filter_relevant_features(incidents_tracts_context_fname, incidents_context_final_fname)
-    
-    # # # ---------------------------------
-    # # # 3 - Model Selection
-    # # # ---------------------------------
+
     if (RUN_TASK == RUN_ALL_TASKS) or (RUN_TASK == RUN_MODEL_SELECTION_TASK):
         data_analyzer = DataAnalyzer()
         incidents_context_final_fname = abspath(join(PROCESSED_DIR, NYC_INCIDENTS_CONTEXT_FINAL_FNAME))
@@ -197,25 +194,42 @@ if __name__ == '__main__':
         logging.info("load data")
         df_incidents_context = data_analyzer.load_data(incidents_context_final_fname)
 
-        # label target to infer whether this region might catch fire or no
-        logging.info("encode target variable")
-        df_incidents_context = data_analyzer.label_target(df_incidents_context, TARGET)
+        if (RUN_TASK_OUT_TIME_VALIDATION == True):
+            # data spans from 01-01-2013 to 31-12-2014 
+            # we run an experiment by training model on 01-01-2013 --> 31-11-2014  to predict next month 
+            all_poss_dates =  np.unique(df_incidents_context[DATETIME_FIELD].values) 
+            TRAIN_DATES = list(set(all_poss_dates) - set(TEST_PERIOD))
+            for i in range(1, 31):
+                prev_day = TEST_PERIOD[i-1]
+                curr_day = TEST_PERIOD[i]
+                logging.info("Predicting Day > {}".format(curr_day))
+                TRAIN_DATES.append(prev_day)
+                TEST_DATES = [curr_day]
+                X_train, X_test, y_train, y_test = data_analyzer.train_test_split_chronologically(df_incidents_context, PREDICTORS, TARGET, TRAIN_DATES, TEST_DATES)
+                classifier = RandomForestClassifier()
+                data_analyzer.run_model(classifier, X_train, X_test, y_train, y_test)
 
-        # samples / target
-        logging.info("get X, y")
-        X, y = data_analyzer.load_samples(df_incidents_context, PREDICTORS, TARGET)
 
-        # interpret features to fine-tune the model
-        logging.info("calculate feature importance")
-        data_analyzer.feature_importance(X, y, PREDICTORS)
+        if (RUN_TASK_SHUFFLE_VALIDATION == True):
+            # label target to infer whether this region might catch fire or no
+            logging.info("encode target variable")
+            df_incidents_context = data_analyzer.label_target(df_incidents_context, TARGET)
 
-        # After benchmarking different methods, decided to use Tree-based model - RandomForest 
-        logging.info("Random Forest Classifier")
-        classifier = RandomForestClassifier
-        cv = 2  # number of folds
-        logging.info("evaluating the model using k-folds: K= {}".format(cv))
-        clr = data_analyzer.evaluate_model(X, y, classifier, cv)
+            # samples / target
+            logging.info("get X, y")
+            X, y = data_analyzer.load_samples(df_incidents_context, PREDICTORS, TARGET)
 
-        # dump_model
-        clr_fname = abspath(join(PROCESSED_DIR, RF_CLR_FNAME))
-        data_analyzer.dump_model(clr, clr_fname)
+            # interpret features to fine-tune the model
+            logging.info("calculate feature importance")
+            data_analyzer.feature_importance(X, y, PREDICTORS)
+
+            # After benchmarking different methods, decided to use Tree-based model - RandomForest 
+            logging.info("Random Forest Classifier")
+            classifier = RandomForestClassifier
+            cv = 2  # number of folds
+            logging.info("evaluating the model using k-folds: K= {}".format(cv))
+            clr = data_analyzer.evaluate_model(X, y, classifier, cv)
+
+            # dump_model
+            clr_fname = abspath(join(PROCESSED_DIR, RF_CLR_FNAME))
+            data_analyzer.dump_model(clr, clr_fname)
