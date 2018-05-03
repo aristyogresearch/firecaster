@@ -1,4 +1,4 @@
-## “FireCaster”: How Can We Use Data to Predict Domestic Fire Risk and Save Lives ? 
+## “FireCaster”: How Can We Use Data to Predict Domestic Fire Risk ? 
 
 ## Problem
 
@@ -132,15 +132,15 @@ We evaluate the performance of our model. We chronologically order the samples a
 
 | Metric | Score   |
 |--------|----------|
-| Accuracy | 0.890 |
-| ROC AUC | 0.902 |
-| Recall | 0.890 |
-| Precision | 0.880 |
-| F1 | 0.883 |
+| Accuracy | 0.89 |
+| ROC AUC | 0.90 |
+| Recall | 0.89 |
+| Precision | 0.88 |
+| F1 | 0.88 |
 
 Table.3: The performance of the model 
 
-To evaluate the effectiveness of features, we list the top 10 features with respect to feature importance in Table 5. We used Bagged decision trees like Random Forest and Extra Trees to estimate the importance of features. It can be easily observed that the most contributive features are Meteorological factors that can influence people's behaviour (indoor/outdoor activities). The buildings' conditions contribute strongly to these events.   
+To evaluate the effectiveness of features, we list the top 10 features with respect to feature importance in Table 5. We used Bagged decision trees like Random Forest and Extra Trees to estimate the importance of features. It can be easily observed that the most contributive features are Meteorological factors that can influence people's behaviour (indoor/outdoor activities). The buildings' conditions contribute strongly to these events. 
 
 
 |Feature | Score   |
@@ -278,7 +278,7 @@ python run.py
 
 ## Team
 
-This project has been developed during an internship at [Snips](https://labs.snips.ai/) on 2014, and it was refactored after that.
+The initial project has been developed during an internship at Snips on 2014, and it was refactored after that.
 
 The project has been developed by [Tahar](http://twitter.com/T_Zano) & [Lilia](https://twitter.com/lilia_oud).
 
